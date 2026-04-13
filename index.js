@@ -13,7 +13,7 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://neelpriyansh:BUHM0hbEr
 const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://vital-guard-seven.vercel.app', 'https://alumni-expenses-findlaw-supervision.trycloudflare.com'],
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://vital-guard-seven.vercel.app', 'https://legacy-democratic-relax-carmen.trycloudflare.com'],
     credentials: true,
 }));
 app.use(express.json());
