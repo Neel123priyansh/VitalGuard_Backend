@@ -146,6 +146,6 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ message: 'Server error. Please try again.' });
     }
 });
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 VitalGuard backend running hahaha on http://localhost:${PORT}`);
 });
