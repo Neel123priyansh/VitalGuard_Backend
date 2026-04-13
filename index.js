@@ -5,11 +5,11 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
-dotenv.config();
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/vitalguard';
+const MONGO_URI = process.env.MONGO_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(cors({
@@ -147,5 +147,5 @@ app.post('/api/login', async (req, res) => {
     }
 });
 app.listen(PORT, () => {
-    console.log(`🚀 VitalGuard backend running on http://localhost:${PORT}`);
+    console.log(`🚀 VitalGuard backend running hahaha on http://localhost:${PORT}`);
 });
