@@ -9,7 +9,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://neelpriyansh:BUHM0hbEryFmL4Aw@cluster0.mtjrnw1.mongodb.net/vitalguard';
 const JWT_SECRET = process.env.JWT_SECRET;
 
 app.use(cors({
