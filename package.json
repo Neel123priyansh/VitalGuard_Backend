@@ -5,6 +5,8 @@
     "dev": "nodemon index.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1041.0",
+    "axios": "^1.15.2",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.1",
@@ -12,7 +14,9 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.1.0",
     "mongoose": "^9.4.1",
-    "nodemon": "^3.1.14"
+    "multer": "^2.1.1",
+    "multer-s3": "^3.0.1",
+    "nodemon": "^3.1.14",
+    "pdf-parse": "^2.4.5"
   }
 }
-

@@ -4,6 +4,33 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import multer from 'multer';
+import axios from 'axios';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const { PDFParse } = require('pdf-parse');
+
+/**
+ * Wrapper function for pdf-parse v2.x to maintain compatibility with original API
+ * @param {Buffer} buffer 
+ * @returns {Promise<{text: string, numpages: number, info: any}>}
+ */
+async function pdf(buffer) {
+    const parser = new PDFParse({ data: buffer });
+    try {
+        const textResult = await parser.getText();
+        const infoResult = await parser.getInfo();
+        return {
+            text: textResult.text,
+            numpages: textResult.total,
+            info: infoResult.info
+        };
+    } finally {
+        await parser.destroy();
+    }
+}
+
 
 dotenv.config();
 
@@ -52,10 +79,43 @@ const User = mongoose.model('User', userSchema);
 const generateToken = (userId) =>
     jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '7d' });
 
+// Memory storage for file uploads
+const memoryStorage = multer.memoryStorage();
+const uploadLocal = multer({ storage: memoryStorage });
 
 // Health check
 app.get('/api/health', (_req, res) => {
     res.json({ status: 'OK', message: 'VitalGuard API is running' });
+});
+
+app.post('/api/upload-report', uploadLocal.single('file'), async (req, res) => {
+    try {
+        if (!req.file) {
+            console.error('No file in request');
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        console.log('File received:', req.file.originalname, req.file.size, 'bytes');
+
+        // Parse PDF directly from buffer
+        const pdfBuffer = req.file.buffer;
+        const data = await pdf(pdfBuffer);
+
+        console.log('PDF parsed successfully - pages:', data.numpages);
+
+        res.status(200).json({
+            message: 'File uploaded and parsed successfully',
+            text: data.text,
+            pdf: { filename: req.file.originalname, numpages: data.numpages, info: data.info },
+        });
+    } catch (error) {
+        console.error('Error parsing file:', error.message);
+        console.error('Full error:', error);
+        res.status(500).json({ 
+            message: 'Error processing file. Please try again.',
+            error: error.message 
+        });
+    }
 });
 
 // SIGNUP
