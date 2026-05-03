@@ -88,6 +88,27 @@ app.get('/api/health', (_req, res) => {
     res.json({ status: 'OK', message: 'VitalGuard API is running' });
 });
 
+// PDF Upload & Parse
+app.post('/api/upload-report', uploadLocal.single('file'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        const dataBuffer = req.file.buffer;
+        const data = await pdf(dataBuffer);
+
+        res.json({
+            message: 'File parsed successfully',
+            text: data.text,
+            numpages: data.numpages
+        });
+    } catch (error) {
+        console.error('Error parsing file:', error);
+        res.status(500).json({ message: 'Error parsing file', error: error.message });
+    }
+});
+
 // SIGNUP
 app.post('/api/signup', async (req, res) => {
     try {
